@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KTM Best Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .admin-shell {
+        max-width: 1100px;
+        margin: 42px auto 70px;
+        padding: 0 16px;
+      }
+
+      .admin-panel {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .admin-topbar {
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 24px;
+      }
+
+      .admin-topbar h1 {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+
+      .logout-button {
+        background: transparent;
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .admin-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 28px;
+        padding: 26px;
+      }
+
+      .admin-form,
+      .admin-list {
+        background: #fffaf6;
+        border: 1px solid var(--border);
+        border-radius: 23px;
+        padding: 22px;
+      }
+
+      .admin-form h2,
+      .admin-list h2 {
+        margin: 0 0 18px;
+        color: var(--primary);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .field label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 0.9rem 1rem;
+        background: white;
+        font: inherit;
+      }
+
+      .field textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+
+      .upload-box {
+        border: 2px dashed var(--border);
+        padding: 18px;
+        border-radius: 18px;
+        background: white;
+        text-align: center;
+      }
+
+      .preview-box {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .preview-box img {
+        width: 100%;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+
+      .action-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .admin-status {
+        margin-top: 12px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        min-height: 20px;
+      }
+
+      .listing-items {
+        display: grid;
+        gap: 12px;
+      }
+
+      .listing-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+      }
+
+      .listing-item strong {
+        display: block;
+        color: var(--primary);
+        margin-bottom: 4px;
+      }
+
+      .listing-item small {
+        color: var(--muted);
+      }
+
+      .delete-button {
+        background: #fff1f1;
+        color: var(--danger);
+        border: 1px solid rgba(214, 40, 40, 0.2);
+        padding: 0.6rem 0.8rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .admin-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .action-row {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-shell">
+      <div class="admin-panel">
+        <div class="admin-topbar">
+          <h1>KTM Best Admin</h1>
+          <button type="button" class="logout-button" id="logoutButton">Logout</button>
+        </div>
+
+        <div class="admin-grid">
+          <section class="admin-form">
+            <h2>Add Property</h2>
+            <form id="propertyForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="title">Title</label>
+                  <input id="title" name="title" type="text" placeholder="Modern 2BR apartment" required />
+                </div>
+
+                <div class="field">
+                  <label for="type">Type</label>
+                  <select id="type" name="type">
+                    <option>FOR RENT</option>
+                    <option>FOR SALE</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="price">Price</label>
+                  <input id="price" name="price" type="text" placeholder="600,000 RWF" required />
+                </div>
+
+                <div class="field">
+                  <label for="location">Location</label>
+                  <input id="location" name="location" type="text" placeholder="Kabeza" required />
+                </div>
+
+                <div class="field">
+                  <label for="beds">Bedrooms</label>
+                  <input id="beds" name="beds" type="number" min="1" value="2" required />
+                </div>
+
+                <div class="field">
+                  <label for="baths">Bathrooms</label>
+                  <input id="baths" name="baths" type="number" min="1" value="2" required />
+                </div>
+
+                <div class="field full">
+                  <label for="area">Area</label>
+                  <input id="area" name="area" type="text" placeholder="120 sqm" required />
+                </div>
+
+                <div class="field full">
+                  <label for="imageUrl">Main image URL</label>
+                  <input id="imageUrl" name="imageUrl" type="url" placeholder="https://images.unsplash.com/..." />
+                </div>
+
+                <div class="field full">
+                  <label for="imageUrls">Other image URLs (optional)</label>
+                  <input id="imageUrls" name="imageUrls" type="text" placeholder="Separate URLs with commas" />
+                </div>
+
+                <div class="field full">
+                  <label for="videoUrl">Video URL (optional)</label>
+                  <input id="videoUrl" name="videoUrl" type="url" placeholder="https://youtube.com/..." />
+                </div>
+
+                <div class="field full">
+                  <label for="description">Description</label>
+                  <textarea id="description" name="description" placeholder="Describe the property"></textarea>
+                </div>
+
+                <div class="field full">
+                  <div class="upload-box">
+                    <input id="fileInput" type="file" accept="image/*" multiple />
+                    <p>Upload up to 3 images if you want to store them locally.</p>
+                    <div id="previewBox" class="preview-box"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="action-row">
+                <button type="submit" class="primary-button">Publish Listing</button>
+                <a href="index.html" class="secondary-button">View Website</a>
+              </div>
+              <div id="adminStatus" class="admin-status" aria-live="polite"></div>
+            </form>
+          </section>
+
+          <aside class="admin-list">
+            <h2>Current Listings</h2>
+            <div id="adminList" class="listing-items"></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

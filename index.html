@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="KTM Best Real Estate - find houses, apartments and properties in Kigali, Rwanda." />
+    <title>KTM Best | Find Your Next Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <a href="index.html" class="brand" aria-label="KTM Best home">
+          <span class="brand-mark">KT</span>
+          <div>
+            <strong>KTM BEST</strong>
+            <small>Rwanda Homes</small>
+          </div>
+        </a>
+
+        <nav class="nav-links" aria-label="main navigation">
+          <a href="#featured">Featured</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="ghost-button" type="button" id="adminTrigger">KT Admin</button>
+          <a class="primary-button" href="https://api.whatsapp.com/send?phone=250784296859&text=Hello%20Khalifa" target="_blank" rel="noreferrer">WhatsApp</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">KIGALI • RWANDA • 0784296859</span>
+            <h1>Your Next <span>Home</span>, Found Fast.</h1>
+            <p>
+              We help buyers, renters, and investors discover high-quality homes with transparent pricing,
+              verified locations, and quick WhatsApp communication.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#featured" class="primary-button">View Listings</a>
+              <a href="tel:+250784296859" class="secondary-button">Call KT</a>
+            </div>
+
+            <div class="trust-row">
+              <div>
+                <strong>600+</strong>
+                <span>Happy clients</span>
+              </div>
+              <div>
+                <strong>4.9★</strong>
+                <span>Client rating</span>
+              </div>
+              <div>
+                <strong>24/7</strong>
+                <span>Property support</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-card">
+              <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200" alt="Luxury modern home" />
+              <div class="hero-card-badge">
+                <span>Featured Listing</span>
+                <strong>Modern 3BR Home</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-panel container" aria-label="Search properties">
+        <div class="search-box">
+          <input id="searchInput" type="text" placeholder="Search by location, title, or keyword" />
+        </div>
+        <div class="filter-box">
+          <select id="typeFilter" aria-label="Filter by property type">
+            <option value="All">All types</option>
+            <option value="FOR RENT">For rent</option>
+            <option value="FOR SALE">For sale</option>
+          </select>
+        </div>
+      </section>
+
+      <section id="featured" class="listings container">
+        <div class="section-header">
+          <div>
+            <span class="eyebrow dark">Featured properties</span>
+            <h2>Homes matching your lifestyle</h2>
+          </div>
+          <div id="propertyCount" class="property-count">0 properties</div>
+        </div>
+
+        <div id="listings" class="listing-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="about" class="about">
+        <div class="container about-grid">
+          <div class="about-copy">
+            <span class="eyebrow dark">Why choose KTM Best</span>
+            <h2>Professional guidance for every move.</h2>
+            <p>
+              We connect clients to homes that fit their budget, lifestyle, and goals. Whether you want a family home,
+              apartment, or investment property, we make the process simple and stress-free.
+            </p>
+          </div>
+
+          <div class="about-points">
+            <div class="point-card">
+              <strong>Verified Listings</strong>
+              <p>Updated and checked for accuracy before publishing.</p>
+            </div>
+            <div class="point-card">
+              <strong>Fast Communication</strong>
+              <p>Quick WhatsApp, phone calls, and personalized guidance.</p>
+            </div>
+            <div class="point-card">
+              <strong>End-to-End Support</strong>
+              <p>We help from the first inquiry to the final visit.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact" class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <h3>KTM Best</h3>
+          <p>Modern homes, trusted guidance, and faster property discovery.</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="tel:+250784296859">0784296859</a>
+          <a href="https://api.whatsapp.com/send?phone=250784296859" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a href="admin.html">Admin</a>
+        </div>
+      </div>
+    </footer>
+
+    <div id="modal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <button type="button" class="modal-close" id="closeModal" aria-label="Close details">×</button>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <div id="adminModal" class="admin-lock-modal" aria-hidden="true">
+      <div class="admin-lock-box">
+        <div class="lock-icon">KT</div>
+        <h3>Admin Access</h3>
+        <p>Enter the admin password to continue.</p>
+        <input id="adminPassword" type="password" placeholder="Password" />
+        <p id="adminError" class="error-text" hidden>Wrong password. Try again.</p>
+        <div class="lock-actions">
+          <button type="button" class="secondary-button" id="cancelAdmin">Cancel</button>
+          <button type="button" class="primary-button" id="submitAdmin">Login</button>
+        </div>
+      </div>
+    </div>
+
+    <a class="floating-whatsapp" href="https://api.whatsapp.com/send?phone=250784296859" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">💬</a>
+
+    <script src="app.js"></script>
+  </body>
+</html>

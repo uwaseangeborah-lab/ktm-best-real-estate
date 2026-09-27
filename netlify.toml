@@ -1,0 +1,214 @@
+const STORAGE_KEY = "ktm_best_listings";
+const ADMIN_KEY = "ktm_admin_logged_in";
+const ADMIN_PASSWORD = "khalifa2025";
+
+function ensureDefaultListings() {
+  const current = localStorage.getItem(STORAGE_KEY);
+  if (!current) {
+    const defaultListings = [
+      {
+        id: 1,
+        title: "Kabeza Modern 2BR Apartment",
+        type: "FOR RENT",
+        price: "600,000 RWF",
+        location: "Kabeza",
+        beds: 2,
+        baths: 2,
+        area: "110 sqm",
+        description:
+          "A modern apartment with secure parking, a bright living area, and a calm residential setting close to schools and shopping centers.",
+        image:
+          "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
+        images: [
+          "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+        ],
+        video: "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+      },
+      {
+        id: 2,
+        title: "Kigali Family House",
+        type: "FOR SALE",
+        price: "1,200,000 RWF",
+        location: "Kigali",
+        beds: 4,
+        baths: 3,
+        area: "220 sqm",
+        description:
+          "A spacious family home with a front garden, lounge, kitchen, and a calm neighborhood that is ideal for long-term living.",
+        image:
+          "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
+        images: [
+          "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+        ],
+        video: ""
+      }
+    ];
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultListings));
+  }
+}
+
+function loginRequired() {
+  const isLoggedIn = localStorage.getItem(ADMIN_KEY) === "true";
+  if (!isLoggedIn) {
+    window.location.href = "index.html";
+  }
+}
+
+function readListings() {
+  try {
+    const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(items) ? items : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveListings(items) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function renderAdminList() {
+  const adminList = document.getElementById("adminList");
+  const listings = readListings();
+
+  if (!listings.length) {
+    adminList.innerHTML = '<div class="empty-state">No listings yet. Add your first property.</div>';
+    return;
+  }
+
+  adminList.innerHTML = listings
+    .map(
+      (listing) => `
+        <div class="listing-item">
+          <div>
+            <strong>${listing.title}</strong>
+            <small>${listing.type} • ${listing.location}</small>
+          </div>
+          <button type="button" class="delete-button" data-id="${listing.id}">Delete</button>
+        </div>
+      `
+    )
+    .join("");
+
+  document.querySelectorAll(".delete-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = Number(button.dataset.id);
+      const next = readListings().filter((item) => item.id !== id);
+      saveListings(next);
+      renderAdminList();
+      setStatus("Listing removed.");
+    });
+  });
+}
+
+function setStatus(message) {
+  const el = document.getElementById("adminStatus");
+  if (el) {
+    el.textContent = message;
+  }
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleFileSelection(event) {
+  const files = Array.from(event.target.files || []).slice(0, 3);
+  const previewBox = document.getElementById("previewBox");
+
+  if (!files.length) {
+    previewBox.innerHTML = "";
+    return;
+  }
+
+  const dataUrls = [];
+  for (const file of files) {
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      dataUrls.push(dataUrl);
+    } catch (error) {
+      console.error("Error reading file", error);
+    }
+  }
+
+  previewBox.innerHTML = dataUrls
+    .map((src) => `<img src="${src}" alt="property upload preview" />`)
+    .join("");
+
+  previewBox.dataset.uploads = JSON.stringify(dataUrls);
+}
+
+function buildListingFromForm() {
+  const form = document.getElementById("propertyForm");
+  const formData = new FormData(form);
+  const uploads = JSON.parse(document.getElementById("previewBox").dataset.uploads || "[]");
+
+  const mainImage = formData.get("imageUrl") || uploads[0] || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80";
+  const rawUrls = String(formData.get("imageUrls") || "")
+    .split(",")
+    .map((str) => str.trim())
+    .filter(Boolean);
+
+  const list = [...uploads, ...rawUrls.filter((url) => !uploads.includes(url))];
+
+  return {
+    id: Date.now(),
+    title: String(formData.get("title") || "").trim(),
+    type: String(formData.get("type") || "FOR RENT"),
+    price: String(formData.get("price") || "").trim(),
+    location: String(formData.get("location") || "").trim(),
+    beds: Number(formData.get("beds") || 1),
+    baths: Number(formData.get("baths") || 1),
+    area: String(formData.get("area") || "").trim(),
+    description: String(formData.get("description") || "").trim(),
+    image: mainImage,
+    images: list.length ? list : [mainImage],
+    video: String(formData.get("videoUrl") || "").trim()
+  };
+}
+
+function handleSubmit(event) {
+  event.preventDefault();
+  const form = document.getElementById("propertyForm");
+  const title = form.title.value.trim();
+  const price = form.price.value.trim();
+  const location = form.location.value.trim();
+
+  if (!title || !price || !location) {
+    setStatus("Please fill in the title, price, and location.");
+    return;
+  }
+
+  const listing = buildListingFromForm();
+  const items = readListings();
+  items.unshift(listing);
+  saveListings(items);
+  renderAdminList();
+  setStatus("Listing published successfully.");
+  form.reset();
+  document.getElementById("previewBox").innerHTML = "";
+  document.getElementById("previewBox").dataset.uploads = "[]";
+}
+
+function logout() {
+  localStorage.removeItem(ADMIN_KEY);
+  window.location.href = "index.html";
+}
+
+document.getElementById("logoutButton").addEventListener("click", logout);
+document.getElementById("propertyForm").addEventListener("submit", handleSubmit);
+document.getElementById("fileInput").addEventListener("change", handleFileSelection);
+
+ensureDefaultListings();
+loginRequired();
+renderAdminList();
